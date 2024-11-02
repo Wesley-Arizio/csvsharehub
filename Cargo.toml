@@ -7,3 +7,5 @@ edition = "2021"
 dotenv = "0.15.0"
 actix-web = "4.9.0"
 clap = { version = "4.5.20", features = ["derive", "env"] }
+diesel = { version = "2.2.0", features = ["sqlite", "returning_clauses_for_sqlite_3_35", "r2d2", "chrono"] }
+chrono = "0.4.38"
