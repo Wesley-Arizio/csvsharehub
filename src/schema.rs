@@ -2,8 +2,11 @@
 
 diesel::table! {
     files (id) {
-        id -> Integer,
-        name -> Text,
+        id -> Text,
+        original_name -> Text,
+        file_path -> Text,
+        content_type -> Text,
+        size -> BigInt,
         created_at -> Timestamp,
         updated_at -> Timestamp,
     }
