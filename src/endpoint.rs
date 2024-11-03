@@ -11,7 +11,7 @@ use uuid::Uuid;
 use log::info;
 
 // Make this an absolute path
-const UPLOAD_DIR: &str = "./uploads";
+const UPLOAD_DIR: &str = "./../../uploads";
 
 pub async fn upload(
     data: web::Data<AppState>,
