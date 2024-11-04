@@ -5,5 +5,7 @@
 file = "src/schema.rs"
 custom_type_derives = ["diesel::query_builder::QueryId", "Clone"]
 
+
+# TODO: Verify if possible to make dir var dynamic to project root
 [migrations_directory]
 dir = "${MIGRATION_DIRECTORY}"
