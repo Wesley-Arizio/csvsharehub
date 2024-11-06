@@ -1,0 +1,54 @@
+
+.App {
+    width: 100vw;
+    height: 100vh;
+
+    padding: 5vw 5vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #dee2e6;
+}
+
+.App form {
+    margin-top: 50px;
+}
+
+.App form button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+}
+
+.App table {
+    width: 100%;
+    margin-top: 100px;
+}
+
+.App table tbody tr {
+    cursor: pointer;
+}
+
+/* Styles for tablets (min-width: 600px) */
+@media (min-width: 600px) {
+    .App table {
+        width: 100%;
+    }
+}
+
+/* Styles for laptops (min-width: 900px) */
+@media (min-width: 900px) {
+    .App table {
+        max-width: 1200px;
+    }
+}
+
+/* Styles for desktops (min-width: 1200px) */
+@media (min-width: 1200px) {
+    .App table {
+        width: 70%;
+        margin-top: 100px;
+    }
+}
