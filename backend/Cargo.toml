@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4.3"
+actix-cors = "0.7.0"
 actix-multipart = "0.6"
 chrono = { version = "0.4", features = ["serde"] }
 clap = { version = "4.0", features = ["derive", "env"] }

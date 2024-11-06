@@ -2,5 +2,6 @@ backend/target
 
 .idea/
 
+backend/uploads
 backend/.env
 backend/database.db
