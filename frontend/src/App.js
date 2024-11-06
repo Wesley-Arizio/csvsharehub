@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
  
 function App() {
   const [file, setFile] = useState(null)
-  const fileInputRef = useRef(null); // Create a ref for the file input
+  const fileInputRef = useRef(null);
   const [disabled, setDisabled] = useState(true);
   const [list, setList] = useState([]);
 
@@ -19,7 +19,7 @@ function App() {
     event.preventDefault();
     if (!file) return;
     try {
-      const url = process.env.REACT_APP_CSV_SHARE_HUB_URL;
+      const url = `${process.env.REACT_APP_CSV_SHARE_HUB_URL}/csv/`;
       const formData = new FormData();
       formData.append('file', file);
       formData.append('fileName', file.name);
