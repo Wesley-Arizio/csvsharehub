@@ -1,7 +1,7 @@
-/target
+backend/target
 
 .idea/
 
-.env
-
-database.db
+backend/uploads
+backend/.env
+backend/database.db

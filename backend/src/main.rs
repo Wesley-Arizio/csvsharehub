@@ -4,7 +4,8 @@ pub mod schema;
 
 use actix_web::{web, App, HttpServer};
 use std::sync::Arc;
-
+use actix_cors::Cors;
+use actix_web::http::header;
 use clap::Parser;
 use diesel::r2d2::{self, ConnectionManager, Pool};
 use diesel::SqliteConnection;
@@ -26,6 +27,10 @@ struct Args {
     /// Url to connect to the database
     #[arg(short, env = "CSV_SHARE_HUB_DATABASE_URL")]
     db_url: String,
+
+    /// Front end url allow requests from
+    #[arg(short, env = "CSV_SHARE_HUB_FRONT_END_URL")]
+    front_end_url: String,
 }
 
 type SqlitePool = Pool<ConnectionManager<SqliteConnection>>;
@@ -85,10 +90,16 @@ async fn main() -> std::io::Result<()> {
 
     log::info!("Starting server at {}:{}", args.api_host, args.port);
 
+    let front_end_url = args.front_end_url.clone();
     HttpServer::new(move || {
+        let cors = Cors::default()
+            .allowed_origin(&front_end_url)
+            .allowed_methods(vec!["GET", "POST"])
+            .allowed_headers(vec![header::CONTENT_TYPE]);
         App::new()
             .app_data(web::Data::new(AppState::new(Arc::clone(&pool))))
             .wrap(actix_web::middleware::Logger::default())
+            .wrap(cors)
             .service(
                 web::scope("/csv")
                     .route("/", web::post().to(endpoint::upload))
