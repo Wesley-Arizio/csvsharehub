@@ -6,7 +6,9 @@ use diesel::prelude::*;
 use futures_util::TryStreamExt;
 use serde_json::json;
 use std::{fs, io::Write, path::Path};
-use std::os::unix::fs::PermissionsExt;  // Add this import for Unix permissions
+use std::os::unix::fs::PermissionsExt;
+use actix_web::error::ErrorNotFound;
+// Add this import for Unix permissions
 use uuid::Uuid;
 use log::info;
 
@@ -134,7 +136,7 @@ pub async fn csv(
     let file = files::table
         .find(id)
         .first::<crate::models::File>(conn)
-        .map_err(|_| ErrorInternalServerError("File not found"))?;
+        .map_err(|_| ErrorNotFound("File not found"))?;
 
     let file_contents = fs::read_to_string(&file.file_path)
         .map_err(ErrorInternalServerError)?;
