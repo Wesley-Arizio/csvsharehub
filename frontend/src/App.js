@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import axios from "axios";
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Link } from "react-router-dom";
  
 function App() {
   const [file, setFile] = useState(null)
@@ -56,7 +57,7 @@ function App() {
       <h5 className="card-title">CSV Share Hub</h5>
       <form onSubmit={handleSubmit}>
           <label htmlFor="formFileLg" className="form-label">Upload CSV file here</label>
-          <input ref={fileInputRef} className="form-control form-control-lg" id="formFileLg" type="file" onChange={handleChange} accept=".csv" />
+          <input size={1000}ref={fileInputRef} className="form-control form-control-lg" id="formFileLg" type="file" onChange={handleChange} accept=".csv" />
           <button type="submit" className="btn btn-primary" disabled={disabled}>Upload</button>
       </form>
 
@@ -76,7 +77,7 @@ function App() {
                 <th scope="row">{i + 1}</th>
                 <td>{v.name}</td>
                 <td>{v.size}</td>
-                <td>http://localhsot:3000/details/{v.id}</td>
+                <td><Link target="_blank" rel="noopener noreferrer" to={`/details/${v.id}`}>View It</Link></td>
               </tr>
             ))
           }
