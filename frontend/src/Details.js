@@ -3,11 +3,20 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {ToastContainer, toast, Bounce } from "react-toastify";
 import Papa from "papaparse";
+import init, {sort_items_by_key} from "./pkg/wasm"
 
 export default function Details() {
     const { id } = useParams();
     const [data, setData] = useState(null);
+    const [header, setHeader] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [sortKey, setSortKey] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+            await init();
+        })()
+    }, [])
 
     useEffect(() => {
         if (id) {
@@ -20,8 +29,9 @@ export default function Details() {
                         toast.error("Something went wrong. Try again later!");
                         return;
                     }
-
-                    setData(Papa.parse(response.data, { header: true }));
+                    const parsed = Papa.parse(response.data, { header: true, skipEmptyLines: true });
+                    setHeader(parsed.meta.fields);
+                    setData(parsed.data);
                 } catch (e) {
                     if (e.status === 404) {
                         toast.error("File Not Found");
@@ -36,26 +46,40 @@ export default function Details() {
         }
     }, [id])
 
+    const sortTable = (e) => {
+        try {
+            const key = e.target.innerText;
+            const sorted = sort_items_by_key(key, data);
+            setSortKey(key);
+            setData(sorted);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
     return (
         <div className="App">
             {isLoading && <p>Loading...</p>}
-            {!isLoading && data && (
+            {!isLoading && data && header && (
                 <table className="table table-striped">
                     <thead>
                         <tr>
                             {
-                                data.meta.fields.map((header, i) => (
-                                    <th key={i} scope="col">{header}</th>
+                                header.map((header, i) => (
+                                    <th key={i} scope="col" onClick={sortTable} className="header-sort">
+                                        {header}
+                                        {header === sortKey ? <i style={{marginLeft: "20px"}} class="bi bi-arrow-down" /> : <i style={{marginLeft: "20px"}} class="bi bi-arrow-up" /> }
+                                    </th>
                                 ))
                             }
                         </tr>
                     </thead>
                     <tbody>
                         {
-                            data.data.map((line, i) => (
+                            data.map((line, i) => (
                             <tr key={i}>
                                 {
-                                    data.meta.fields.map((key, j) => (
+                                    header.map((key, j) => (
                                         <td key={j}>{line[key]}</td>
                                     ))
                                 }
