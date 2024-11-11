@@ -23,31 +23,27 @@ pub async fn upload(
     // Create uploads directory with explicit permissions
     if let Err(e) = fs::create_dir_all(UPLOAD_DIR) {
         log::error!("Failed to create upload directory: {}", e);
-        return Err(ErrorInternalServerError("Failed to create upload directory"));
+        return Err(ErrorInternalServerError(format!("Failed to create upload directory: {}", e)));
     }
 
-    // Set directory permissions to 755 (rwxr-xr-x)
-    if let Ok(metadata) = fs::metadata(UPLOAD_DIR) {
-        let mut perms = metadata.permissions();
-        perms.set_mode(0o755);
-        if let Err(e) = fs::set_permissions(UPLOAD_DIR, perms) {
-            log::error!("Failed to set directory permissions: {}", e);
-        }
-    }
+    info!("Upload directory created successfully");
 
-    // Log the upload directory status
-    if let Ok(metadata) = fs::metadata(UPLOAD_DIR) {
-        info!("Upload directory exists: {}", UPLOAD_DIR);
-        info!("Directory permissions: {:o}", metadata.permissions().mode());
-    }
-
-    while let Some(mut field) = payload.try_next().await? {
+    while let Some(mut field) = payload.try_next().await.map_err(|e| {
+        log::error!("Failed to get next field: {}", e);
+        ErrorInternalServerError(format!("Failed to get next field: {}", e))
+    })? {
         let content_disposition = field.content_disposition();
-        let filename = content_disposition
-            .get_filename()
-            .ok_or_else(|| ErrorInternalServerError("No filename provided"))?
-            .to_owned();
+        
+        let filename = match content_disposition.get_filename() {
+            Some(name) => name.to_owned(),
+            None => {
+                log::error!("No filename provided");
+                return Err(ErrorInternalServerError("No filename provided"));
+            }
+        };
 
+        info!("Processing file: {}", filename);
+        
         if !filename.to_lowercase().ends_with(".csv") {
             return Ok(HttpResponse::BadRequest().json(json!({
                 "error": "Only CSV files are allowed"

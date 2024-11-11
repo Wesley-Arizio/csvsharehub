@@ -2,6 +2,9 @@ mod endpoint;
 pub mod models;
 pub mod schema;
 
+#[cfg(test)]
+mod tests;
+
 use actix_web::{web, App, HttpServer};
 use std::sync::Arc;
 use actix_cors::Cors;
