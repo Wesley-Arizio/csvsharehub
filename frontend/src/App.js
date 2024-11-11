@@ -57,7 +57,7 @@ function App() {
       <h5 className="card-title">CSV Share Hub</h5>
       <form onSubmit={handleSubmit}>
           <label htmlFor="formFileLg" className="form-label">Upload CSV file here</label>
-          <input size={1000}ref={fileInputRef} className="form-control form-control-lg" id="formFileLg" type="file" onChange={handleChange} accept=".csv" />
+          <input size={1000} ref={fileInputRef} className="form-control form-control-lg" id="formFileLg" type="file" onChange={handleChange} accept=".csv" />
           <button type="submit" className="btn btn-primary" disabled={disabled}>Upload</button>
       </form>
 
